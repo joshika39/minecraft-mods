@@ -24,7 +24,9 @@
         "id": "3553317",
         "domain": "mediafilez",
         "filename": "autumnity-1.16.5-2.1.2.jar",
-        "depend_on": [],
+        "depend_on": [
+            "3607198"
+        ],
         "state": "install"
     },
     {

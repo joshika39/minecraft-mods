@@ -1,10 +1,13 @@
-from mod import ModManager
+from mod import ModManager, PackManager
 from baselib import minecraft_path
 from modoperations import copy_to_target
+from picker import SingleMenu
 
-manager = ModManager(True)
-pack = manager.select_mod_packs()
+mod_mgr = ModManager(True)
+pack_mgr = PackManager(mod_mgr, True)
+pack = pack_mgr.select_mod_packs()
+
 if pack is not None:
-	copy_to_target(manager, pack.pack_content, minecraft_path())
+	copy_to_target(mod_mgr, pack.pack_content, minecraft_path())
 	input("Press Enter to exit...")
 

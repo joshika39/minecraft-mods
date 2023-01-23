@@ -183,9 +183,9 @@ class Mod:
             if not os.path.exists(dest) and self.state == "install":
                 shutil.copyfile(self.local_path, dest)
                 print(f'Copying: {self.local_path} -> {dest}')
-                if self.depend_on is not None and len(self.depend_on) > 0:
-                    for dep in self.depend_on:
-                        dep.copy2(path)
+            if self.depend_on is not None and len(self.depend_on) > 0:
+                for dep in self.depend_on:
+                    dep.copy2(path)
         else:
             print(f"Local mod not found: {self.local_path}")
 
@@ -247,6 +247,10 @@ class ModPack:
                     count += 1
             oredered[category] = mod_category_content
         return count, oredered
+
+    def remove_mods(self, mods_to_remove: list[Mod]):
+        new_list = set(self.pack_content) - set(mods_to_remove)
+        self.pack_content = new_list
                 
 class ModManager:
     mod_list = []  # type: List[Mod]
@@ -357,7 +361,7 @@ class PackManager:
 
     def select_mod_packs(self) -> ModPack:
         if self.mod_packs is not None:
-            return SingleMenu("Select a modpack:", self.mod_packs, None).show()
+            return SingleMenu("Select a modpack:", self.mod_packs).show()
 
     def get_pack_content_by_name(self, name):
         for pack in self.mod_packs:

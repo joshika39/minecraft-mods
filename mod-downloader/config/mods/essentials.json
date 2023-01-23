@@ -59,7 +59,9 @@
         "id": "3552849",
         "domain": "mediafilez",
         "filename": "VisualWorkbench-v1.1.0-1.16.5.jar",
-        "depend_on": [],
+        "depend_on": [
+            "3517499"
+        ],
         "state": "install"
     },
     {
