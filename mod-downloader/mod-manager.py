@@ -117,6 +117,8 @@ main_menu = MenuWrapper(
                 FunctionItem("Remove Deps", remove_mod_from_modpack),
                 FunctionItem("Edit Deps", modify_mod_dependencies)
             ]),
+            FunctionItem("Pack mods", pack_mods),
+            FunctionItem("Unpack mods", unpack_mods)
         ]),
         MenuWrapper("Select pack Operation", [
             SingleMenu("List Pack Content", pack_manager.mod_packs, list_contents),
