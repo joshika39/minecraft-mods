@@ -82,7 +82,9 @@
         "id": "4025585",
         "domain": "mediafilez",
         "filename": "portablemobs-1.1.1-forge-mc1.16.jar",
-        "depend_on": [],
+        "depend_on": [
+            "4364891"
+        ],
         "state": "install"
     }
 ]

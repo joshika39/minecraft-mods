@@ -82,5 +82,12 @@
         "filename": "structure_gel-1.16.5-1.7.8.jar",
         "depend_on": [],
         "state": "install"
+    },
+    {
+        "id": "4364891",
+        "domain": "mediafilez",
+        "filename": "supermartijn642corelib-1.1.1a-forge-mc1.16.jar",
+        "depend_on": [],
+        "state": "install"
     }
 ]

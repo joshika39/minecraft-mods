@@ -73,9 +73,14 @@ def modify_mod_state():
     mod_manager.mod_to_json()
 
 def add_deps_to_mod():
-    target_mod = SingleMenu("Target mods", mod_manager.mod_list).show()
+    target_mod = SingleMenu("Mod to modify", mod_manager.mod_list).show()  # type: Mod
     if target_mod is not None:
-        deps = SingleMenu("Target mods", mod_manager.mod_list).show()
+        deps = MultiMenu("Dependencies", mod_manager.mod_list).show() # type: list[Mod]
+        if deps is not None:
+            for dep in deps:
+                if dep not in target_mod.depend_on:
+                    target_mod.depend_on.append(dep)
+            mod_manager.mod_to_json()
 
 def modify_mod_dependencies():
     target_mods = MultiMenu("Target mods", mod_manager.mod_list).show()
@@ -113,7 +118,7 @@ main_menu = MenuWrapper(
             FunctionItem("Add Multiple Mod", add_multiple_mod),
             FunctionItem("Modify mod state", modify_mod_state),
             MenuWrapper("Mod Dependencies", [
-                FunctionItem("Add Deps", add_mod_to_modpack),
+                FunctionItem("Add Deps", add_deps_to_mod),
                 FunctionItem("Remove Deps", remove_mod_from_modpack),
                 FunctionItem("Edit Deps", modify_mod_dependencies)
             ]),
