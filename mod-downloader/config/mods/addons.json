@@ -59,7 +59,9 @@
         "id": "3642325",
         "domain": "mediafilez",
         "filename": "Quark-r2.4-322.jar",
-        "depend_on": ["3326041"],
+        "depend_on": [
+            "3326041"
+        ],
         "state": "install"
     },
     {
@@ -87,7 +89,9 @@
         "id": "3874384",
         "domain": "mediafilez",
         "filename": "supplementaries-1.16.5-0.18.4b.jar",
-        "depend_on": ["3517008"],
+        "depend_on": [
+            "3517008"
+        ],
         "state": "install"
     }
 ]

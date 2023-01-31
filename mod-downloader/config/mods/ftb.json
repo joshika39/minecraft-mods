@@ -30,7 +30,9 @@
         "id": "3553840",
         "domain": "mediafilez",
         "filename": "ftb-library-forge-1605.3.4-build.90.jar",
-        "depend_on": ["3857643"],
+        "depend_on": [
+            "3857643"
+        ],
         "state": "install"
     },
     {

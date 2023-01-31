@@ -24,7 +24,9 @@
         "id": "3838362",
         "domain": "mediafilez",
         "filename": "EnchantmentDescriptions-1.16.5-7.1.20.jar",
-        "depend_on": ["3732239"],
+        "depend_on": [
+            "3732239"
+        ],
         "state": "install"
     },
     {
