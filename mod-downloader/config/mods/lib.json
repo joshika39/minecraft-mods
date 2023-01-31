@@ -84,9 +84,9 @@
         "state": "install"
     },
     {
-        "id": "4364891",
+        "id": "3863127",
         "domain": "mediafilez",
-        "filename": "supermartijn642corelib-1.1.1a-forge-mc1.16.jar",
+        "filename": "supermartijn642corelib-1.0.19-forge-mc1.16.5.jar",
         "depend_on": [],
         "state": "install"
     }
