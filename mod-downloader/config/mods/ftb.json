@@ -41,7 +41,8 @@
         "filename": "ftb-quests-forge-1605.3.6-build.98.jar",
         "depend_on": [
             "3376819",
-            "3553840"
+            "3553840",
+            "3535953"
         ],
         "state": "install"
     },

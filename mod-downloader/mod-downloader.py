@@ -13,8 +13,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--server', '-s', action='store_true', help='Copy the mods to the server\'s folder.')
 args = parser.parse_args()
 
-mod_mgr = ModManager()
-pack_mgr = PackManager(mod_mgr)
+mod_mgr = ModManager(True)
+pack_mgr = PackManager(mod_mgr, True)
 pack = pack_mgr.select_mod_packs()
 
 if args.server and pack is not None:

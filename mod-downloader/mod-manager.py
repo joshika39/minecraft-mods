@@ -117,6 +117,7 @@ main_menu = MenuWrapper(
             FunctionItem("Add Single Mod", add_single_mod),
             FunctionItem("Add Multiple Mod", add_multiple_mod),
             FunctionItem("Modify mod state", modify_mod_state),
+            FunctionItem("List all mods", mod_manager.print),
             MenuWrapper("Mod Dependencies", [
                 FunctionItem("Add Deps", add_deps_to_mod),
                 FunctionItem("Remove Deps", remove_mod_from_modpack),

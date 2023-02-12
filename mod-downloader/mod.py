@@ -286,8 +286,11 @@ class ModManager:
         self.mod_categories.clear()
 
     def print(self):
+        print(f'Mod count: {len(self.mod_list)}')
+        self.mod_list.sort(key=lambda m: m.name)
         for mod in self.mod_list:
             print(mod)
+        input("Press any key to continue...")
 
     def mod_to_json(self):
         for category in self.mod_categories:
