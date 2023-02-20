@@ -201,5 +201,17 @@
         "display_name": "Test Pack",
         "description": "Some description here",
         "pack_content": []
+    },
+    {
+        "name": "team-event",
+        "display_name": "Team Event XperiCad",
+        "description": "Guys, if you wanna join us, hop on this collection and you're good to go!",
+        "pack_content": [
+            "3609611",
+            "4060770",
+            "3584024",
+            "3672855",
+            "4297564"
+        ]
     }
 ]

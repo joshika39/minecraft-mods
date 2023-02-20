@@ -38,6 +38,17 @@ def add_single_mod():
         time.sleep(2)
     mod_manager.mod_to_json()
 
+
+def add_single_pack():
+    pack_name = input("Enter pack name: ")
+    pack_dis_name = input("Enter pack display name: ")
+    pack_desc = input("Enter pack description: ")
+    contents = MultiMenu("Contents:", mod_manager.mod_list).show()  # type: list[Mod]
+    pack = ModPack.create_pack(pack_name, pack_dis_name, pack_desc, contents)
+    if pack is not None:
+        pack_manager.mod_packs.append(pack)
+        pack_manager.packs_to_json()
+
 def add_multiple_mod():
     if not os.path.exists(DEFAULT_IMPORT_PATH):
         print("Default file not found: " + DEFAULT_IMPORT_PATH)
@@ -100,8 +111,11 @@ def add_mod_to_modpack():
             time.sleep(3)
             return
         selection = MultiMenu("Select the mods:", list(available_mods)).show()
-        for mod in selection:
-            pack.pack_content.append(mod)
+        if len(selection) == 1:
+            pack.pack_content.append(selection)
+        else:
+            for mod in selection:
+                pack.pack_content.append(mod)
         pack_manager.packs_to_json()
 
 def remove_mod_from_modpack():
@@ -127,6 +141,7 @@ main_menu = MenuWrapper(
             FunctionItem("Unpack mods", unpack_mods)
         ]),
         MenuWrapper("Select pack Operation", [
+            FunctionItem("Create a pack", add_single_pack),
             SingleMenu("List Pack Content", pack_manager.mod_packs, list_contents),
             MenuWrapper("Modify Pack Content", [
                 FunctionItem("Add Mod", add_mod_to_modpack),
