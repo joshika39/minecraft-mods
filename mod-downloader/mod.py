@@ -8,6 +8,7 @@ import json
 from zipfile import ZipFile
 from advanced_selector import *
 import newmod
+
 zip_url = "https://github.com/joshika39/minecraft-mods/raw/main/data/mods.zip"
 pack_url = "https://raw.githubusercontent.com/joshika39/minecraft-mods/main/mod-downloader/config/packs.json"
 
@@ -17,23 +18,6 @@ dev_json_dir = os.path.join(proj_root(), 'mod-downloader', 'config', 'mods')
 mod_file_dir = os.path.join(proj_root(), 'data', 'jars')
 pack_path = os.path.join(proj_root(), 'data', 'packs.json')
 dev_pack_path = os.path.join(proj_root(), 'mod-downloader', 'config', 'packs.json')
-
-
-def init(is_local=False):
-    create_dir(os.path.join(proj_root(), 'data'))
-    create_dir(json_dir)
-    create_dir(mod_file_dir)
-    if is_local:
-        clear_dir(json_dir)
-        pack_mods()
-        unpack_mods()
-        shutil.copyfile(dev_pack_path, pack_path)
-        if len(os.listdir(json_dir)) <= 0 or not os.path.exists(zip_path):
-            download_config()
-            unpack_mods()
-    else:
-        download_config()
-        unpack_mods()
 
 
 def download_config():
@@ -117,23 +101,12 @@ def installed_mods_list() -> list[str]:
 def mod_list_to_filenames(mod_list: list['Mod']):
     return [mod.filename for mod in mod_list]
 
+
 class Mod:
+    """
+    Mod class to store mod data
+    """
     depend_on = []  # type: list['Mod']
-
-    @classmethod
-    def load_from_json(cls, json, category: str) -> 'Mod':
-        return cls(json['id'], category, json['domain'], json['filename'], json['depend_on'], json['state'])
-
-    def __str__(self):
-        deps = ""
-        for mod in self.depend_on:
-            deps += f'{mod.name} '
-        deps = deps[:-1]
-        deps = deps[:100] + (deps[100:] and '..')
-        return colorize(f"{self.name}{GRAY} - ({self.state}) - {YELLOW}({deps})", GREEN)
-
-    def details(self) -> str:
-        return f"Mod: {self.name}\n-> {self.category}\n-> {self.filename}\n-> {self.link}\n" + 10 * '-' + '\n'
 
     def __init__(self, mod_id: str, category: str, domain: str, file_name: str, depend_on_str: list[str], state: str):
         self.state = state
@@ -150,14 +123,29 @@ class Mod:
         else:
             self.link = None
 
+    @classmethod
+    def load_from_json(cls, json, category: str) -> 'Mod':
+        return cls(json['id'], category, json['domain'], json['filename'], json['depend_on'], json['state'])
+
+    def __str__(self):
+        deps = ""
+        for mod in self.depend_on:
+            deps += f'{mod.name} '
+        deps = deps[:-1]
+        deps = deps[:100] + (deps[100:] and '..')
+        return colorize(f"{self.name}{GRAY} - ({self.state}) - {YELLOW}({deps})", GREEN)
+
+    def details(self) -> str:
+        return f"Mod: {self.name}\n-> {self.category}\n-> {self.filename}\n-> {self.link}\n" + 10 * '-' + '\n'
+
     def depend_on_to_str(self) -> list[str]:
         data = [dep.mod_id for dep in self.depend_on]
         return data
 
     def serializable_attrs(self):
         props = {
-            'id': self.mod_id, 
-            'domain': self.domain, 
+            'id': self.mod_id,
+            'domain': self.domain,
             'filename': self.filename,
             'depend_on': self.depend_on_to_str(),
             'state': self.state
@@ -182,20 +170,24 @@ class Mod:
                 return False
 
     def copy2(self, path: str):
+        """
+        Copy the mod to the specified path
+        :param path:  Destination path
+        :return: None
+        """
         dest = os.path.join(path, self.filename)
         if not os.path.exists(self.local_path):
             create_dir(self.local_dir)
             if self.link is not None:
                 if os.path.exists(self.local_dir) and not os.path.exists(self.local_path):
                     self.download()
-        
+
         if not os.path.exists(dest) and self.state == "install" and os.path.exists(self.local_path):
             shutil.copyfile(self.local_path, dest)
             print(f'Copying: {self.local_path} -> {dest}')
         if self.depend_on is not None and len(self.depend_on) > 0:
             for dep in self.depend_on:
                 dep.copy2(path)
-            
 
     def remove(self):
         print(f"Removing: {self.local_path}")
@@ -216,7 +208,8 @@ class ModPack:
 
     @classmethod
     def init_pack(cls, existing_pack: 'ModPack') -> 'ModPack':
-        return cls(existing_pack.name, existing_pack.display_name, existing_pack.description, existing_pack.pack_content)
+        return cls(existing_pack.name, existing_pack.display_name, existing_pack.description,
+                   existing_pack.pack_content)
 
     def __init__(self, name: str, display_name: str, description: str, pack_content: List[Mod]):
         self.name = name
@@ -238,15 +231,16 @@ class ModPack:
         return props
 
     def list_contents(self, types=['inactive', 'download', 'install']) -> list[Mod]:
-        mods = [] #type: list[Mod]
+        mods = []  # type: list[Mod]
         for mod in self.pack_content:
             if mod.state in types:
                 mods.append(mod)
         return mods
 
-    def list_contents_ordered(self, categories: list[str], types=['inactive', 'download', 'install']) -> tuple[int, dict[str, list[Mod]]]:
+    def list_contents_ordered(self, categories: list[str], types=['inactive', 'download', 'install']) -> tuple[
+        int, dict[str, list[Mod]]]:
         count = 0
-        oredered = {} 
+        oredered = {}
         for category in categories:
             mod_category_content = []
             for mod in self.pack_content:
@@ -259,11 +253,12 @@ class ModPack:
     def remove_mods(self, mods_to_remove: list[Mod]):
         new_list = set(self.pack_content) - set(mods_to_remove)
         self.pack_content = new_list
-                
+
+
 class ModManager:
     mod_list = []  # type: List[Mod]
     new_mod_list = []  # type: List[newmod.Mod]
-    
+
     mod_categories = []
 
     def __init__(self, is_local=False):
@@ -282,7 +277,8 @@ class ModManager:
                     mod = Mod.load_from_json(mod_data, category)
                     if mod:
                         self.mod_list.append(mod)
-                        n_mod = newmod.Mod(mod.mod_id, file_path, os.path.join(dev_json_dir, f'new{category}.json'), mod.category)
+                        n_mod = newmod.Mod(mod.mod_id, file_path, os.path.join(dev_json_dir, f'new{category}.json'),
+                                           mod.category)
                         n_mod.setup(mod.domain, mod.filename, mod.depend_on_str, mod.state)
                         self.new_mod_list.append(n_mod)
                         # if not os.path.exists(mod.local_path) and mod.state != "inactive":
@@ -373,7 +369,7 @@ class PackManager:
                     if mod_manager.get_mod_by_id(mod_id) is not None:
                         temp_mods.append(mod_manager.get_mod_by_id(mod_id))
                 self.mod_packs.append(ModPack.load_from_json(pack_data, temp_mods))
-    
+
     def __del__(self):
         self.mod_packs.clear()
 
@@ -385,7 +381,7 @@ class PackManager:
         for pack in self.mod_packs:
             if pack == name:
                 return pack
-    
+
     def packs_to_json(self):
         data = []
         for pack in self.mod_packs:
